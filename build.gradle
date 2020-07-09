@@ -1,0 +1,62 @@
+plugins {
+    id "net.ltgt.apt-eclipse" version "0.21"
+    id "com.github.johnrengelman.shadow" version "5.0.0"
+    id "application"
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+
+version "0.1.0"
+group "mn.transactions.issues"
+
+repositories {
+    mavenCentral()
+    maven { url "https://jcenter.bintray.com" }
+}
+
+dependencies {
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor "io.micronaut:micronaut-validation"
+
+    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+    implementation("io.micronaut.data:micronaut-data-tx")
+    implementation "io.micronaut:micronaut-inject"
+    implementation "io.micronaut:micronaut-validation"
+    implementation "io.micronaut:micronaut-runtime"
+    implementation "javax.annotation:javax.annotation-api"
+    implementation "io.micronaut:micronaut-http-server-netty"
+    implementation "io.micronaut:micronaut-http-client"
+    runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
+    implementation "org.springframework:spring-jdbc"
+    implementation "io.micronaut.sql:micronaut-jdbc-hikari:$micronautSqlVersion"
+
+    testCompileOnly "io.micronaut:micronaut-inject-groovy:$micronautVersion"
+    testImplementation "io.micronaut.test:micronaut-test-spock"
+    testImplementation "org.spockframework:spock-core"
+    testImplementation "org.codehaus.groovy:groovy"
+    testRuntimeOnly "com.h2database:h2:$h2Version"
+}
+
+mainClassName = "mn.transactions.issues.Application"
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile){
+    options.encoding = "UTF-8"
+    options.compilerArgs.add('-parameters')
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote')

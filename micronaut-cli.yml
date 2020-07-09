@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: mn.transactions.issues
+---
+testFramework: junit
+sourceLanguage: java

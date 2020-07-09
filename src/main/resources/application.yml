@@ -1,0 +1,16 @@
+micronaut:
+  application:
+    name: mn-transactions-issues
+
+datasources:
+  default:
+    url: 'jdbc:h2:mem:test'
+    username: 'sa'
+    password: ''
+    driverClassName: 'org.h2.Driver'
+    sql-dialect: 'POSTGRES' #not necessary?
+
+flyway:
+  datasources:
+    default:
+      locations: classpath:db.migrations, classpath:db.testdata #include test data for test!
