@@ -23,16 +23,9 @@ class PersonManagerTest extends Specification {
     @Shared
     Sql sql = new Sql(getConnection())
 
-    @Shared
-    def migrations = loadMigrations()
-
     @Subject
     @Inject
-    def PersonManager personManager;
-
-    def 'setup'() {
-        runSqlMigrations()
-    }
+    PersonManager personManager
 
     def 'cleanup'() {
         sql.executeUpdate('DROP ALL OBJECTS')
@@ -71,37 +64,5 @@ class PersonManagerTest extends Specification {
 
         return dataSource;
     }
-
-    def runSqlMigrations() {
-        migrations.each({ migration ->
-            sql.executeUpdate(migration)
-        })
-    }
-
-    def loadMigrations() {
-        def path = "./src/main/resources/db"
-
-        def files = extractFiles(path)
-        return loadSqlFiles(files)
-    }
-
-    def extractFiles(String path) {
-        def files = []
-        def dir = new File(path)
-        dir.eachFileRecurse(FileType.FILES) { file ->
-            files.add(file)
-        }
-        files
-    }
-
-    def loadSqlFiles(files) {
-        def migrations = []
-        files.sort().each { file ->
-            def migration = file.readLines().join()
-            migrations.add(migration)
-        }
-        return migrations
-    }
-
 
 }

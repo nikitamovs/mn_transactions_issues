@@ -1,5 +1,6 @@
 package mn.transactions.issues;
 
+
 import io.micronaut.transaction.annotation.ReadOnly;
 import java.util.List;
 import javax.inject.Singleton;
