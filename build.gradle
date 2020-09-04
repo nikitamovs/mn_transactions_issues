@@ -11,30 +11,66 @@ version "0.1.0"
 group "mn.transactions.issues"
 
 repositories {
+    mavenLocal()
     mavenCentral()
-    maven { url "https://jcenter.bintray.com" }
+    jcenter()
+    maven { url 'https://jitpack.io' }
+    maven {
+        url mavenGroupRepository
+        name "GitLab"
+        credentials(HttpHeaderCredentials) {
+            name = 'Private-Token'
+            value = project.hasProperty('gitlabToken') ? gitlabToken : System.env.GITLAB_TOKEN ?: ''
+        }
+        authentication {
+            header(HttpHeaderAuthentication)
+        }
+    }
 }
+
 
 dependencies {
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
+    implementation "tritt.common:common-api:$commonVersion"
+    implementation "tritt.common:common-validation:$commonVersion"
+    implementation "tritt.common:common-util:$commonVersion"
+    implementation "tritt.common:common-http:$commonVersion"
+    implementation "tritt.common:common-security:$commonVersion"
+    implementation "tritt.common:common-persistence-jdbc:$commonVersion"
+
     annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
     annotationProcessor "io.micronaut:micronaut-inject-java"
     annotationProcessor "io.micronaut:micronaut-validation"
+    annotationProcessor "io.micronaut.security:micronaut-security:$micronautSecurityVersion"
+    annotationProcessor "io.micronaut.configuration:micronaut-openapi:$micronautOpenApiVersion"
+    annotationProcessor "com.fasterxml.jackson.module:jackson-module-parameter-names"
+    annotationProcessor "io.swagger.core.v3:swagger-models"
+    annotationProcessor "io.swagger.core.v3:swagger-core"
 
     implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
-    implementation "io.micronaut:micronaut-inject"
+    implementation "io.micronaut:micronaut-inject-java"
     implementation "io.micronaut:micronaut-validation"
     implementation "io.micronaut:micronaut-runtime"
     implementation "io.micronaut:micronaut-http-server-netty"
     implementation "io.micronaut:micronaut-http-client"
-    runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
+    implementation 'io.micronaut:micronaut-discovery-client'
+    implementation "io.micronaut:micronaut-multitenancy"
+    implementation("io.micronaut:micronaut-spring:$micronautVersion")
+    implementation "io.micronaut.kubernetes:micronaut-kubernetes-discovery-client:$micronautKubernetesVersion"
+    implementation "io.micronaut.security:micronaut-security-jwt:$micronautSecurityVersion"
+    implementation "io.micronaut.flyway:micronaut-flyway:$micronautFlywayVersion"
+
+    implementation "io.swagger.core.v3:swagger-annotations"
+
+    runtimeOnly "ch.qos.logback:logback-classic"
+
+
+    implementation "org.springframework:spring-jdbc"
     implementation "io.micronaut.sql:micronaut-jdbc-hikari:$micronautSqlVersion"
     implementation "io.micronaut.flyway:micronaut-flyway:$micronautFlywayVersion"
-    implementation("io.micronaut:micronaut-spring:$micronautVersion")
-    implementation "org.springframework:spring-jdbc"
 
     testCompileOnly "io.micronaut:micronaut-inject-groovy:$micronautVersion"
     testImplementation "io.micronaut.test:micronaut-test-spock"
@@ -42,7 +78,7 @@ dependencies {
     testImplementation "org.codehaus.groovy:groovy"
     testImplementation "org.codehaus.groovy:groovy-sql"
     runtimeOnly "org.postgresql:postgresql:$postgresqlVersion"
-    testImplementation "org.testcontainers:postgresql:$testContainersVersion"
+    implementation "org.testcontainers:postgresql:$testContainersVersion"
 }
 
 mainClassName = "mn.transactions.issues.Application"
@@ -51,7 +87,7 @@ test {
     useJUnitPlatform()
 }
 
-tasks.withType(JavaCompile){
+tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
     options.compilerArgs.add('-parameters')
 }

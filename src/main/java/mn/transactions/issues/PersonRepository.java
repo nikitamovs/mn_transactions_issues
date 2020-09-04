@@ -24,7 +24,7 @@ public class PersonRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         int inserted = jdbcTemplate.update(
-                "insert into person(name) values(:name)",
+                "insert into _9109905270242ac130003.person(name) values(:name)",
                 new MapSqlParameterSource(new HashMap<>() {{
                     put("name", p.getName());
                 }}),
@@ -41,7 +41,7 @@ public class PersonRepository {
 
     public Optional<Person> findById(long id) {
         List<Person> persons = jdbcTemplate.query(
-                "select id, name, version from person where id = :id",
+                "select id, name, version from _9109905270242ac130003.person where id = :id",
                 new HashMap<>() {{
                     put("id", id);
                 }},

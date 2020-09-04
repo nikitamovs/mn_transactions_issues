@@ -3,8 +3,10 @@ package mn.transactions.issues;
 import io.micronaut.spring.tx.annotation.Transactional;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Propagation;
 
+@Slf4j
 @Singleton
 @RequiredArgsConstructor
 public class PersonManager {
