@@ -1,68 +1,49 @@
 package mn.transactions.issues
 
-import groovy.io.FileType
-import groovy.sql.Sql
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.client.HttpClient
+import io.micronaut.http.client.annotation.Client
 import io.micronaut.test.annotation.MicronautTest
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import org.springframework.jdbc.datasource.DriverManagerDataSource
-import spock.lang.AutoCleanup
-import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Subject
 
 import javax.inject.Inject
-import javax.sql.DataSource
-import java.sql.Connection
+import java.time.Instant
 
 @MicronautTest
 class PersonManagerTest extends Specification {
 
-    @AutoCleanup
-    static DataSource datasource
-
-    @Shared
-    Sql sql = new Sql(getConnection())
-
-    @Subject
     @Inject
     PersonManager personManager
 
+    @Inject
+    @Client("/")
+    HttpClient client
+
     def 'cleanup'() {
-        sql.executeUpdate('DROP ALL OBJECTS')
+        //entitymanager.createNativeQuery('DROP ALL OBJECTS').executeUpdate()
     }
 
     def 'test transaction management'() {
         given:
-            def person = Person.builder().name("Peer Gynt").build()
+            def person = Person.builder().id(219L).name("Peer Gynt").version(Instant.now()).build()
+        when:
+            client.toBlocking().exchange(HttpRequest.POST("/", "test"))
+        then:
+            thrown(RuntimeException)
+        when:
+            def fetched = client.toBlocking().retrieve("/", Person)
+        then:
+            thrown(RuntimeException)
+            fetched == null
         when:
             personManager.doSomePersonStuff(person)
         then:
             thrown(RuntimeException)
         when:
-            def persons = personManager.getPersons(person.getName())
+            fetched = personManager.getPersons(219L)
         then:
-            persons.size() == 0
-    }
-
-    Connection getConnection() {
-        lazyloadDatasource().getConnection()
-    }
-
-    def lazyloadDatasource() {
-        if (datasource == null) {
-            datasource = buildDatasource()
-        }
-        return datasource
-    }
-
-    def buildDatasource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource()
-        dataSource.setDriverClassName('org.h2.Driver')
-        dataSource.setUrl('jdbc:h2:mem:test')
-        dataSource.setUsername('sa')
-        dataSource.setPassword('');
-
-        return dataSource;
+            fetched == null
     }
 
 }

@@ -3,6 +3,7 @@ package mn.transactions.issues;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
+import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -14,14 +15,12 @@ public class PersonController {
 
     @Post
     public void doSomeShit() {
-        manager.doSomePersonStuff(Person.builder()
-                .name("Per")
-                .build());
+        manager.doSomePersonStuff(Person.builder().id(200L).name("Per Heimly").version(Instant.now()).build());
     }
 
     @Get
-    public List<Person> getPersons() {
-        return manager.getPersons("Per");
+    public Person getPersons() {
+        return manager.getPersons(200L);
     }
 
 }

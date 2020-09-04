@@ -32,8 +32,8 @@ dependencies {
     implementation "io.micronaut:micronaut-http-server-netty"
     implementation "io.micronaut:micronaut-http-client"
     runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
-    implementation "org.springframework:spring-jdbc"
     implementation("io.micronaut.data:micronaut-data-tx")
+    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
     implementation "io.micronaut.sql:micronaut-jdbc-hikari:$micronautSqlVersion"
     implementation "io.micronaut.flyway:micronaut-flyway:$micronautFlywayVersion"
 
@@ -42,7 +42,8 @@ dependencies {
     testImplementation "org.spockframework:spock-core"
     testImplementation "org.codehaus.groovy:groovy"
     testImplementation "org.codehaus.groovy:groovy-sql"
-    runtimeOnly "com.h2database:h2:$h2Version"
+    runtimeOnly "org.postgresql:postgresql:$postgresqlVersion"
+    testImplementation "org.testcontainers:postgresql:$testContainersVersion"
 }
 
 mainClassName = "mn.transactions.issues.Application"
