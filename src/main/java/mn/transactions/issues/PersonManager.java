@@ -14,7 +14,7 @@ public class PersonManager {
 
     private final PersonRepository personRepository;
 
-    @Transactional(TxType.REQUIRED)
+    @Transactional(TxType.REQUIRES_NEW)
     public void doSomePersonStuff(Person p) {
         personRepository.save(p);
         throw new RuntimeException("mohahaha");

@@ -36,6 +36,8 @@ dependencies {
     implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
     implementation "io.micronaut.sql:micronaut-jdbc-hikari:$micronautSqlVersion"
     implementation "io.micronaut.flyway:micronaut-flyway:$micronautFlywayVersion"
+    implementation("io.micronaut:micronaut-spring:$micronautVersion")
+//    implementation "org.springframework:spring-jdbc"
 
     testCompileOnly "io.micronaut:micronaut-inject-groovy:$micronautVersion"
     testImplementation "io.micronaut.test:micronaut-test-spock"
