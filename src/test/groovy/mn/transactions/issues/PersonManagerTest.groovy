@@ -26,22 +26,23 @@ class PersonManagerTest extends Specification {
 
     def 'test transaction management'() {
         given:
-            def person = Person.builder().id(219L).name("Peer Gynt").version(Instant.now()).build()
-        when:
-            client.toBlocking().exchange(HttpRequest.POST("/", "test"))
-        then:
-            thrown(RuntimeException)
-        when:
-            def fetched = client.toBlocking().retrieve("/", Person)
-        then:
-            thrown(RuntimeException)
-            fetched == null
+            def person = Person.builder().name("Peer Gynt").build()
+//        when:
+//            client.toBlocking().exchange(HttpRequest.POST("/", "test"))
+//        then:
+//            thrown(RuntimeException)
+//        when:
+//            def fetched = client.toBlocking().retrieve("/", Person)
+//        then:
+//            thrown(RuntimeException)
+//            fetched == null
         when:
             personManager.doSomePersonStuff(person)
         then:
+            person.id != null
             thrown(RuntimeException)
         when:
-            fetched = personManager.getPersons(219L)
+            def fetched = personManager.getPersons(person.id)
         then:
             fetched == null
     }

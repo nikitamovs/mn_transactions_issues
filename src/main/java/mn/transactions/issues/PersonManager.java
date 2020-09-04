@@ -1,12 +1,9 @@
 package mn.transactions.issues;
 
-
-import io.micronaut.transaction.annotation.ReadOnly;
-import java.util.List;
+import io.micronaut.spring.tx.annotation.Transactional;
 import javax.inject.Singleton;
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Propagation;
 
 @Singleton
 @RequiredArgsConstructor
@@ -14,15 +11,15 @@ public class PersonManager {
 
     private final PersonRepository personRepository;
 
-    @Transactional(TxType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void doSomePersonStuff(Person p) {
         personRepository.save(p);
         throw new RuntimeException("mohahaha");
     }
 
-    @ReadOnly
+    @Transactional(readOnly = true)
     public Person getPersons(long id) {
-        return  personRepository.findById(id).orElse(null);
+        return personRepository.findById(id).orElse(null);
     }
 
 }
